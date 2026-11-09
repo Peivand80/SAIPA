@@ -1,0 +1,31 @@
+{% comment %} ردیف ریلزهای عمودی. نیازمند reels و site {% endcomment %}
+{% if reels %}
+<section class="section">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div>
+        <h2>ریلزها و کلیپ‌ها</h2>
+        <p>اطلاعیه‌های فروش، معرفی محصولات و خدمات نمایندگی</p>
+      </div>
+      {% if site.instagram %}<a class="more-link" href="{{ site.instagram }}" target="_blank" rel="noopener">صفحه اینستاگرام</a>{% endif %}
+    </div>
+    <div class="reels" data-reveal>
+      {% for r in reels %}
+        <article class="reel">
+          <video src="{{ r.url }}" {% if r.poster %}poster="{{ r.poster }}"{% endif %} muted loop playsinline preload="none" data-autoplay aria-label="{{ r.title }}"></video>
+          <span class="reel-badge"><svg class="i"><use href="#i-mute"/></svg>بی‌صدا</span>
+          <span class="reel-title">{{ r.title }}</span>
+          {% if r.link %}<a class="reel-link" href="{{ r.link }}" target="_blank" rel="noopener" aria-label="مشاهده {{ r.title }}"></a>{% endif %}
+        </article>
+      {% endfor %}
+      {% if site.instagram %}
+        <a class="reel reel-insta" href="{{ site.instagram }}" target="_blank" rel="noopener">
+          <svg class="i"><use href="#i-instagram"/></svg>
+          <strong>ریلزهای بیشتر در اینستاگرام نمایندگی</strong>
+          <span>@{{ site.instagram|cut:"https://www.instagram.com/"|cut:"https://instagram.com/"|cut:"/" }}</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}

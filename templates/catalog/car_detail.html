@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static interactions %}
+{% block title %}{{ car.title }} | {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ car.summary|truncatechars:160 }}{% endblock %}
+{% block og_image %}{% if car.image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ car.image.url }}">{% endif %}{% endblock %}
+
+{% block content %}
+<section class="car-detail-head">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="{% url 'core:home' %}">خانه</a></li>
+      <li><a href="{% url 'catalog:list' %}">محصولات</a></li>
+      <li aria-current="page">{{ car.title }}</li>
+    </ol>
+    <div class="car-hero">
+      <div>
+        <div class="gallery-main">
+          <img id="gallery-main" src="{% if car.image %}{{ car.image.url }}{% else %}{% static 'img/placeholder-car.svg' %}{% endif %}" alt="{{ car.title }}">
+        </div>
+        {% if car.images.all %}
+          <div class="gallery-thumbs" role="list">
+            <button type="button" class="active" data-gallery="{{ car.image.url }}" aria-label="تصویر اصلی"><img src="{{ car.image.url }}" alt=""></button>
+            {% for img in car.images.all %}
+              <button type="button" data-gallery="{{ img.image.url }}" aria-label="{{ img.caption|default:'تصویر گالری' }}"><img src="{{ img.image.url }}" alt="" loading="lazy"></button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="car-summary">
+        {% if car.category %}<span class="tag">{{ car.category }}</span>{% endif %}
+        <h1>{{ car.title }}</h1>
+        {% if car.tagline %}<p class="car-tagline">{{ car.tagline }}</p>{% endif %}
+        <p>{{ car.summary }}</p>
+        <div class="car-price">
+          <small>قیمت / وضعیت فروش</small>
+          <strong>{{ car.price_text|default:"برای اطلاع از شرایط فروش تماس بگیرید" }}</strong>
+        </div>
+        {% if car.colors.all %}
+          <div class="swatches" aria-label="رنگ‌های موجود">
+            {% for color in car.colors.all %}<span class="swatch"><i style="background:{{ color.hex_code }}"></i>{{ color.name }}</span>{% endfor %}
+          </div>
+        {% endif %}
+        <div class="car-actions">
+          {% if car.sale_link %}<a class="btn btn-primary" href="{{ car.sale_link }}" target="_blank" rel="noopener">سامانه فروش رسمی</a>{% endif %}
+          <a class="btn btn-outline" href="{% url 'contact:contact' %}?subject=sales">مشاوره خرید</a>
+          {% if car.brochure %}<a class="btn btn-outline" href="{{ car.brochure.url }}" download><svg class="i"><use href="#i-download"/></svg>کاتالوگ</a>{% endif %}
+        </div>
+        <div style="margin-top:20px">{% like_button car %}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container layout-sidebar">
+    <div>
+      <nav class="tabs-nav" aria-label="بخش‌های صفحه">
+        {% if spec_groups %}<a href="#specs" class="active">مشخصات فنی</a>{% endif %}
+        {% if car.description %}<a href="#about">معرفی</a>{% endif %}
+        <a href="#comments">نظرات ({{ comments_count|fa_num }})</a>
+      </nav>
+
+      {% if spec_groups %}
+        <div id="specs" class="article-body" style="margin-bottom:28px">
+          <div class="spec-groups">
+            {% for group, specs in spec_groups.items %}
+              <table class="spec-table">
+                <caption>{{ group }}</caption>
+                <tbody>{% for s in specs %}<tr><th scope="row">{{ s.title }}</th><td>{{ s.value }}</td></tr>{% endfor %}</tbody>
+              </table>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if car.description %}
+        <div id="about" class="article-body"><div class="prose">{{ car.description|safe }}</div></div>
+      {% endif %}
+
+      {% include "interactions/comments.html" %}
+    </div>
+
+    <aside class="sidebar">
+      <div class="panel panel-brand">
+        <h3>سرویس و تعمیر {{ car.title }}</h3>
+        <p style="font-size:var(--fs-sm)">برای سرویس دوره‌ای یا تعمیر، نوبت آنلاین بگیرید.</p>
+        <a class="btn btn-light btn-block" href="{% url 'services:appointment' %}">رزرو نوبت</a>
+      </div>
+      {% if compatible_parts %}
+        <div class="panel">
+          <h3>قطعات این خودرو</h3>
+          <ul class="footer-links" style="font-size:var(--fs-sm)">
+            {% for p in compatible_parts %}<li><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></li>{% endfor %}
+          </ul>
+          <a class="more-link" href="{% url 'parts:list' %}?car={{ car.slug }}" style="display:inline-block;margin-top:10px">همه قطعات</a>
+        </div>
+      {% endif %}
+      {% if related %}
+        <div class="panel">
+          <h3>سایر محصولات</h3>
+          <ul class="footer-links" style="font-size:var(--fs-sm)">
+            {% for r in related %}<li><a href="{{ r.get_absolute_url }}">{{ r.title }}</a></li>{% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+{% endblock %}

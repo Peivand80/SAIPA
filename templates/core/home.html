@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ site.site_name }} | {{ site.slogan }}{% endblock %}
+
+{% block content %}
+{# ===================== بخش اصلی ===================== #}
+<section class="hero">
+  <span class="hero-glow" aria-hidden="true"></span>
+  <span class="hero-chevron" aria-hidden="true"></span>
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <span class="hero-dealer">
+        <span class="dot" aria-hidden="true"></span>
+        نمایندگی رسمی سایپا{% if site.dealer_code %} — کد {{ site.dealer_code|fa_num }}{% endif %}
+      </span>
+      <h1>{{ site.hero_title }}</h1>
+      {% if site.hero_subtitle %}<p class="hero-sub">{{ site.hero_subtitle }}</p>{% endif %}
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="{{ site.hero_button_link }}">{{ site.hero_button_text }}</a>
+        <a class="btn btn-outline" href="{% url 'catalog:list' %}">مشاهده محصولات</a>
+      </div>
+      {% if stats %}
+        <div class="hero-stats">
+          {% for s in stats %}<div><strong data-count="{{ s.value }}">{{ s.value|fa_num }}</strong><span>{{ s.label }}</span></div>{% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {# ستون‌های تصاویر متحرک نمایندگی #}
+    <div class="photo-columns" aria-label="تصاویر نمایندگی">
+      {% for col in photo_columns %}
+        <div class="photo-col">
+          <div class="photo-track">
+            {% for round in "12" %}{% for p in col %}
+              <figure{% if round == "2" %} aria-hidden="true"{% endif %}>
+                <img src="{{ p.url }}" alt="{% if round == '1' %}{{ p.caption }}{% endif %}" loading="{% if round == '1' and forloop.counter < 3 %}eager{% else %}lazy{% endif %}">
+                {% if p.caption %}<figcaption>{{ p.caption }}</figcaption>{% endif %}
+              </figure>
+            {% endfor %}{% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ===================== دسترسی سریع ===================== #}
+<nav class="quick-tiles" aria-label="دسترسی سریع">
+  <div class="container">
+    <ul>
+      {% if site.appointment_enabled %}
+      <li data-reveal style="--i:0"><a href="{% url 'services:appointment' %}">
+        <span class="task-icon"><svg class="i"><use href="#i-calendar"/></svg></span>
+        <span><strong>رزرو نوبت تعمیرگاه</strong><small>انتخاب روز و ساعت مراجعه</small></span>
+      </a></li>
+      <li data-reveal style="--i:1"><a href="{% url 'services:track' %}">
+        <span class="task-icon"><svg class="i"><use href="#i-search"/></svg></span>
+        <span><strong>پیگیری نوبت</strong><small>با کد پیگیری و شماره موبایل</small></span>
+      </a></li>
+      {% endif %}
+      <li data-reveal style="--i:2"><a href="{% url 'parts:inquiry' %}">
+        <span class="task-icon"><svg class="i"><use href="#i-box"/></svg></span>
+        <span><strong>استعلام قطعه یدکی</strong><small>قیمت و موجودی قطعات اصلی</small></span>
+      </a></li>
+      <li data-reveal style="--i:3"><a href="{% url 'warranty:index' %}">
+        <span class="task-icon"><svg class="i"><use href="#i-shield"/></svg></span>
+        <span><strong>گارانتی و کارت طلایی</strong><small>شرایط، مدارک و پرسش‌ها</small></span>
+      </a></li>
+    </ul>
+  </div>
+</nav>
+
+{# ===================== نوار متحرک محصولات ===================== #}
+<section class="marquee-section" aria-labelledby="cars-title">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div>
+        <h2 id="cars-title">محصولات سایپا</h2>
+        <p>مشخصات فنی، رنگ‌بندی و شرایط فروش خودروهای عرضه‌شده در نمایندگی</p>
+      </div>
+      <a class="more-link" href="{% url 'catalog:list' %}">همه محصولات</a>
+    </div>
+  </div>
+  <div class="marquee">
+    <div class="marquee-track">
+      {% for round in "12" %}
+        {% for c in car_strip %}
+          <div class="marquee-item" {% if round == "2" %}aria-hidden="true"{% endif %}>
+            {% if c.link %}<a class="car-tile" href="{{ c.link }}" {% if round == "2" %}tabindex="-1"{% endif %}>{% else %}<div class="car-tile">{% endif %}
+              <img src="{{ c.url }}" alt="{% if round == '1' %}{{ c.title|default:'محصول سایپا' }}{% endif %}" loading="lazy">
+              <span class="car-tile-info">
+                <span>{% if c.title %}<strong>{{ c.title }}</strong>{% endif %}{% if c.tag %}<small>{{ c.tag }}</small>{% endif %}</span>
+                {% if c.link %}<span class="car-tile-go"><svg class="i"><use href="#i-go"/></svg></span>{% endif %}
+              </span>
+            {% if c.link %}</a>{% else %}</div>{% endif %}
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      {% for round in "12" %}<span>فروش</span><span>خدمات پس از فروش</span><span>قطعات یدکی اصلی</span><span>گارانتی</span><span>کارت طلایی</span><span>امداد خودرو</span>{% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ===================== درباره نمایندگی ===================== #}
+<section class="section">
+  <div class="container about-split">
+    <div class="about-visual" data-reveal>
+      <div class="main-photo"><img src="{% if site.about_image %}{{ site.about_image.url }}{% else %}{{ about_image }}{% endif %}" alt="محصولات سایپا" loading="lazy"></div>
+      {% if photos %}<div class="sub-photo"><img src="{{ photos.0.url }}" alt="{{ photos.0.caption }}" loading="lazy"></div>{% endif %}
+      <div class="about-badge"><img src="{% static 'img/saipa-emblem.png' %}" alt="" width="28" height="26">نمایندگی مجاز سایپا</div>
+    </div>
+    <div class="about-copy" data-reveal style="--i:1">
+      <h2>{{ site.about_title }}</h2>
+      <p>{% if site.about_summary %}{{ site.about_summary }}{% else %}{{ site.site_name }} همراه شما در خرید خودرو، سرویس دوره‌ای، تعمیرات و تأمین قطعات اصلی سایپا است.{% endif %}</p>
+      <ul class="feature-list">
+        <li><a href="{% url 'catalog:list' %}"><span class="ic"><svg class="i"><use href="#i-car"/></svg></span>فروش محصولات</a></li>
+        <li><a href="{% url 'services:list' %}"><span class="ic"><svg class="i"><use href="#i-wrench"/></svg></span>خدمات پس از فروش</a></li>
+        <li><a href="{% url 'parts:list' %}"><span class="ic"><svg class="i"><use href="#i-box"/></svg></span>قطعات یدکی اصلی</a></li>
+        <li><a href="{% url 'warranty:index' %}"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span>گارانتی و کارت طلایی</a></li>
+      </ul>
+      <a class="btn btn-outline" href="{% url 'core:about' %}">آشنایی بیشتر با نمایندگی</a>
+    </div>
+  </div>
+</section>
+
+{# ===================== ویدیو نمایندگی ===================== #}
+{% include "includes/video_band.html" %}
+
+{# ===================== خدمات ===================== #}
+{% if services %}
+<section class="section services-band" style="--band-img: url('{% static 'img/site/workshop-lifts.jpg' %}')">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div>
+        <h2>خدمات پس از فروش</h2>
+        <p>تعمیرات، سرویس دوره‌ای و عیب‌یابی با قطعات اصلی و تعمیرکاران آموزش‌دیده</p>
+      </div>
+      <a class="more-link" href="{% url 'services:list' %}" style="color:var(--brand-hi)">همه خدمات</a>
+    </div>
+    <div class="service-list">
+      {% for s in services %}
+        <a class="service-item" href="{{ s.get_absolute_url }}" data-reveal style="--i:{{ forloop.counter0 }}">
+          <span class="service-icon"><svg class="i i-lg"><use href="#i-{{ s.icon }}"/></svg></span>
+          <span><h3>{{ s.title }}</h3><p>{{ s.summary|truncatewords:16 }}</p></span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ===================== محصولات (کارت) ===================== #}
+{% if cars %}
+<section class="section {% if not services %}section-white{% endif %}">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div><h2>محصولات ویژه</h2><p>خودروهای منتخب نمایندگی</p></div>
+      <a class="more-link" href="{% url 'catalog:list' %}">همه محصولات</a>
+    </div>
+    <div class="grid grid-3">
+      {% for car in cars %}<div data-reveal style="--i:{{ forloop.counter0 }}">{% include "includes/car_card.html" %}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ===================== ریلزها ===================== #}
+{% include "includes/reels.html" %}
+
+{# ===================== گارانتی ===================== #}
+{% if plans %}
+<section class="section">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div><h2>گارانتی و کارت طلایی</h2><p>از شرایط پوشش و تعهدات پس از فروش خودروی خود مطلع شوید</p></div>
+      <a class="more-link" href="{% url 'warranty:index' %}">جزئیات بیشتر</a>
+    </div>
+    <div class="grid grid-3">
+      {% for plan in plans %}
+        <article class="plan-card" data-reveal style="--i:{{ forloop.counter0 }}">
+          <span class="service-icon"><svg class="i i-lg"><use href="#i-{{ plan.icon }}"/></svg></span>
+          <h3>{{ plan.title }}</h3>
+          <p>{{ plan.summary|truncatewords:26 }}</p>
+          {% if plan.highlights %}<ul class="check-list">{% for h in plan.highlights|linebreaks_list|slice:":3" %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
+          <a class="btn btn-outline btn-sm" href="{{ plan.get_absolute_url }}">شرایط کامل</a>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ===================== مجله ===================== #}
+{% if posts %}
+<section class="section section-white">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div><h2>مجله خودرو</h2><p>راهنمای نگهداری، اخبار نمایندگی و نکات فنی</p></div>
+      <a class="more-link" href="{% url 'blog:list' %}">همه مطالب</a>
+    </div>
+    <div class="grid grid-3">
+      {% for post in posts %}<div data-reveal style="--i:{{ forloop.counter0 }}">{% include "includes/post_card.html" %}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ===================== فضای نمایندگی ===================== #}
+<section class="section">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div><h2>فضای نمایندگی</h2><p>سالن فروش، پذیرش و تعمیرگاه</p></div>
+    </div>
+    <div class="mosaic">
+      {% for p in photos|slice:":4" %}
+        <figure data-reveal style="--i:{{ forloop.counter0 }}"><img src="{{ p.url }}" alt="{{ p.caption }}" loading="lazy">{% if p.caption %}<figcaption>{{ p.caption }}</figcaption>{% endif %}</figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ===================== تماس ===================== #}
+<section class="section-tight">
+  <div class="container">
+    <div class="cta-band" data-reveal style="--band-img: url('{% static 'img/site/reception.jpg' %}')">
+      <div>
+        <h2>سؤالی دارید؟</h2>
+        <p>کارشناسان فروش و خدمات نمایندگی در ساعات کاری پاسخگوی شما هستند.</p>
+      </div>
+      <div class="actions">
+        {% if site.phone %}<a class="btn btn-primary" href="tel:{{ site.phone }}"><svg class="i"><use href="#i-phone"/></svg><span class="ltr">{{ site.phone|fa_num }}</span></a>{% endif %}
+        <a class="btn btn-ghost-light" href="{% url 'contact:contact' %}">ارسال پیام</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block chatbot %}{% include "chatbot/widget.html" %}{% endblock %}

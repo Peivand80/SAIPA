@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}قطعات یدکی اصلی | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_head.html" with title="قطعات یدکی" subtitle="قطعات اصلی با ضمانت اصالت کالا. برای قطعاتی که در لیست نیست، فرم استعلام را پر کنید." %}
+<section class="section">
+  <div class="container">
+    <form class="filter-form" method="get" role="search">
+      <div class="q"><label class="sr-only" for="pq">نام یا کد قطعه</label><input id="pq" type="search" name="q" value="{{ filters.q }}" placeholder="نام یا کد فنی قطعه"></div>
+      <div><label class="sr-only" for="pc">دسته‌بندی</label>
+        <select id="pc" name="category"><option value="">همه دسته‌ها</option>{% for c in categories %}<option value="{{ c.slug }}"{% if c.slug == filters.category %} selected{% endif %}>{{ c.title }}</option>{% endfor %}</select>
+      </div>
+      <div><label class="sr-only" for="pcar">خودرو</label>
+        <select id="pcar" name="car"><option value="">همه خودروها</option>{% for c in cars %}<option value="{{ c.slug }}"{% if c.slug == filters.car %} selected{% endif %}>{{ c.title }}</option>{% endfor %}</select>
+      </div>
+      <button class="btn btn-primary" type="submit">فیلتر</button>
+    </form>
+
+    {% if parts %}
+      <p class="result-count">{{ page_obj.paginator.count|fa_num }} قطعه</p>
+      <div class="grid grid-4">{% for part in parts %}{% include "includes/part_card.html" %}{% endfor %}</div>
+      {% include "includes/pagination.html" %}
+    {% else %}
+      {% include "includes/empty.html" with icon="box" heading="قطعه‌ای با این مشخصات پیدا نشد" text="درخواست خود را از طریق فرم استعلام ثبت کنید تا کارشناس قطعات با شما تماس بگیرد." link_url="/parts/inquiry/" link_label="استعلام قطعه" %}
+    {% endif %}
+
+    <div class="cta-band" style="margin-top:48px">
+      <div><h2>قطعه مورد نظر را پیدا نکردید؟</h2><p>نام قطعه و مدل خودرو را بفرستید؛ قیمت و موجودی را به شما اطلاع می‌دهیم.</p></div>
+      <div class="actions"><a class="btn btn-primary" href="{% url 'parts:inquiry' %}">استعلام قطعه</a></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

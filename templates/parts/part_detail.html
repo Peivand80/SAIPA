@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ part.title }}{% if part.code %} ({{ part.code }}){% endif %} | {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ part.description|default:part.title|truncatechars:160 }}{% endblock %}
+
+{% block content %}
+{% url 'parts:list' as list_url %}
+{% include "includes/page_head.html" with title=part.title crumb_label="قطعات یدکی" crumb_url=list_url %}
+<section class="section">
+  <div class="container">
+    <div class="car-hero">
+      <div class="gallery-main"><img src="{% if part.image %}{{ part.image.url }}{% else %}{% static 'img/placeholder-part.svg' %}{% endif %}" alt="{{ part.title }}"></div>
+      <div class="car-summary">
+        {% if part.category %}<span class="tag">{{ part.category }}</span>{% endif %}
+        <h2 style="margin-top:10px">{{ part.title }}</h2>
+        <dl class="kv" style="border-top:1px solid var(--line);margin-bottom:20px">
+          {% if part.code %}<dt>کد فنی</dt><dd><span class="code">{{ part.code }}</span></dd>{% endif %}
+          <dt>موجودی</dt><dd><span class="stock stock-{{ part.stock }}">{{ part.get_stock_display }}</span></dd>
+          <dt>اصالت</dt><dd>{% if part.is_genuine %}قطعه اصلی (جنیون){% else %}قطعه تأییدشده{% endif %}</dd>
+          <dt>قیمت</dt><dd>{% if part.price %}{{ part.price|money }} تومان{% else %}استعلام بگیرید{% endif %}</dd>
+          {% if part.cars.all %}<dt>مناسب برای</dt><dd>{% for c in part.cars.all %}<a href="{{ c.get_absolute_url }}">{{ c.title }}</a>{% if not forloop.last %}، {% endif %}{% endfor %}</dd>{% endif %}
+        </dl>
+        {% if part.description %}<p>{{ part.description|linebreaksbr }}</p>{% endif %}
+        <a class="btn btn-primary" href="#inquiry">استعلام قیمت و موجودی</a>
+      </div>
+    </div>
+
+    <h2 style="margin-top:56px;font-size:var(--fs-md)">استعلام این قطعه</h2>
+    {% include "parts/_inquiry_form.html" %}
+
+    {% if related %}
+      <div class="section-head" style="margin-top:56px"><div><h2>قطعات مشابه</h2></div></div>
+      <div class="grid grid-4">{% for part in related %}{% include "includes/part_card.html" %}{% endfor %}</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

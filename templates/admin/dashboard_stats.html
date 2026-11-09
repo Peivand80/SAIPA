@@ -1,0 +1,14 @@
+{% load persian %}
+<div class="dash">
+  <div class="dash-cards">
+    {% for c in cards %}
+      <a class="dash-card{% if c.value %} has-items{% endif %}" href="{{ c.url }}">
+        <strong>{{ c.value|fa_num }}</strong>
+        <span>{{ c.label }}</span>
+      </a>
+    {% endfor %}
+  </div>
+  <div class="dash-shortcuts">
+    {% for label, url in shortcuts %}<a class="button" href="{{ url }}"{% if url == "/" %} target="_blank"{% endif %}>{{ label }}</a>{% endfor %}
+  </div>
+</div>

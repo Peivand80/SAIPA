@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}نوبت‌دهی آنلاین تعمیرگاه | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_head.html" with title="نوبت‌دهی آنلاین تعمیرگاه" subtitle="روز و ساعت مراجعه را انتخاب کنید؛ پس از ثبت، کد پیگیری دریافت می‌کنید." %}
+<section class="section">
+  <div class="container booking-layout">
+    <form class="form-card" method="post" novalidate data-booking data-availability-url="{% url 'services:availability' %}">
+      {% csrf_token %}
+      <div class="hp-field" aria-hidden="true">{{ form.website }}</div>
+      {% if site.appointment_notice %}<p class="notice"><svg class="i"><use href="#i-info"/></svg><span>{{ site.appointment_notice }}</span></p>{% endif %}
+
+      <div class="form-section">
+        <h2><span class="step-no">۱</span>زمان مراجعه</h2>
+        <div class="form-grid">
+          {% include "includes/field.html" with field=form.service span=True %}
+          {% include "includes/field.html" with field=form.date %}
+          <div class="field{% if form.slot.errors %} has-error{% endif %}">
+            <label for="{{ form.slot.id_for_label }}">{{ form.slot.label }} <span class="req">*</span></label>
+            {{ form.slot }}
+            <div class="slot-hint" data-slot-hint>{% if not form.date.value %}ابتدا روز مراجعه را انتخاب کنید.{% endif %}</div>
+            {% for e in form.slot.errors %}<div class="error">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2><span class="step-no">۲</span>مشخصات خودرو</h2>
+        <div class="form-grid">
+          {% include "includes/field.html" with field=form.car_model %}
+          {% include "includes/field.html" with field=form.plate_number %}
+          {% include "includes/field.html" with field=form.mileage %}
+          {% include "includes/field.html" with field=form.description span=True %}
+        </div>
+        <datalist id="car-models">{% for m in form.car_models %}<option value="{{ m }}">{% endfor %}</datalist>
+      </div>
+
+      <div class="form-section">
+        <h2><span class="step-no">۳</span>اطلاعات تماس</h2>
+        <div class="form-grid">
+          {% include "includes/field.html" with field=form.full_name %}
+          {% include "includes/field.html" with field=form.phone %}
+        </div>
+      </div>
+
+      <div style="margin-top:28px"><button class="btn btn-primary" type="submit">ثبت نوبت</button></div>
+    </form>
+
+    <aside class="sidebar">
+      <div class="panel panel-brand">
+        <h3>مراحل نوبت‌دهی</h3>
+        <ol class="steps">
+          <li><span><strong>ثبت درخواست</strong>روز و ساعت دلخواه را انتخاب کنید.</span></li>
+          <li><span><strong>دریافت کد پیگیری</strong>کد را یادداشت کنید.</span></li>
+          <li><span><strong>تأیید پذیرش</strong>کارشناس پذیرش وضعیت نوبت را تأیید می‌کند.</span></li>
+          <li><span><strong>مراجعه</strong>در زمان مقرر به پذیرش مراجعه کنید.</span></li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h3>نوبت گرفته‌اید؟</h3>
+        <p style="font-size:var(--fs-sm);color:var(--muted)">وضعیت نوبت را با کد پیگیری و شماره موبایل ببینید.</p>
+        <a class="btn btn-outline btn-block" href="{% url 'services:track' %}">پیگیری نوبت</a>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

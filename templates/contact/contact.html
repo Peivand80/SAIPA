@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}تماس با ما | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_head.html" with title="تماس با ما" subtitle="پیام خود را بفرستید یا در ساعات کاری با نمایندگی تماس بگیرید." %}
+<section class="section">
+  <div class="container booking-layout">
+    <form class="form-card" method="post" novalidate>
+      {% csrf_token %}
+      <div class="hp-field" aria-hidden="true">{{ form.website }}</div>
+      <div class="form-grid">
+        {% include "includes/field.html" with field=form.full_name %}
+        {% include "includes/field.html" with field=form.phone %}
+        {% include "includes/field.html" with field=form.email %}
+        {% include "includes/field.html" with field=form.subject %}
+        {% include "includes/field.html" with field=form.message span=True %}
+      </div>
+      <div style="margin-top:20px"><button class="btn btn-primary" type="submit">ارسال پیام</button></div>
+    </form>
+
+    <aside class="sidebar">
+      <div class="panel">
+        <h3>اطلاعات تماس</h3>
+        <ul class="contact-list">
+          {% if site.phone %}<li><span class="ic"><svg class="i"><use href="#i-phone"/></svg></span><div><small>تلفن</small><a href="tel:{{ site.phone }}" class="ltr">{{ site.phone|fa_num }}</a></div></li>{% endif %}
+          {% if site.mobile %}<li><span class="ic"><svg class="i"><use href="#i-phone"/></svg></span><div><small>همراه</small><a href="tel:{{ site.mobile }}" class="ltr">{{ site.mobile|fa_num }}</a></div></li>{% endif %}
+          {% if site.email %}<li><span class="ic"><svg class="i"><use href="#i-mail"/></svg></span><div><small>ایمیل</small><a href="mailto:{{ site.email }}">{{ site.email }}</a></div></li>{% endif %}
+          {% if site.address %}<li><span class="ic"><svg class="i"><use href="#i-pin"/></svg></span><div><small>آدرس</small><strong>{{ site.address }}</strong></div></li>{% endif %}
+          {% if site.working_hours %}<li><span class="ic"><svg class="i"><use href="#i-clock"/></svg></span><div><small>ساعات کاری</small><strong>{{ site.working_hours }}</strong></div></li>{% endif %}
+        </ul>
+        {% if not site.phone and not site.address %}<p style="color:var(--muted);font-size:var(--fs-sm);margin:0">اطلاعات تماس از پنل مدیریت › تنظیمات سایت وارد می‌شود.</p>{% endif %}
+      </div>
+      {% if site.social_links %}
+        <div class="panel"><h3>شبکه‌های اجتماعی</h3><div class="social" style="margin:0">{% for s in site.social_links %}<a class="icon-btn" href="{{ s.url }}" target="_blank" rel="noopener" aria-label="{{ s.label }}"><svg class="i"><use href="#i-{{ s.key }}"/></svg></a>{% endfor %}</div></div>
+      {% endif %}
+    </aside>
+  </div>
+  {% if site.map_embed_url %}
+    <div class="container" style="margin-top:32px">
+      <iframe class="map-frame" src="{{ site.map_embed_url }}" loading="lazy" title="موقعیت نمایندگی روی نقشه" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

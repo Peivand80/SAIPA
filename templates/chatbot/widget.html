@@ -1,0 +1,27 @@
+{% load static %}
+<div class="chatbot" data-chatbot data-url="{% url 'chatbot:ask' %}">
+  <div class="chat-panel" role="dialog" aria-label="دستیار نمایندگی" aria-hidden="true">
+    <div class="chat-head">
+      <img src="{% static 'img/saipa-emblem.png' %}" alt="">
+      <div><strong>دستیار نمایندگی</strong><small>پاسخگوی خودکار</small></div>
+      <button class="chat-close" type="button" data-chat-close aria-label="بستن"><svg class="i"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="chat-body" data-chat-body aria-live="polite">
+      <div class="msg msg-bot">{{ bot_greeting }}</div>
+    </div>
+    <div class="chat-chips" data-chat-chips>
+      {% for q in bot_quick %}<button type="button">{{ q }}</button>{% endfor %}
+    </div>
+    <form class="chat-form" data-chat-form>
+      <label class="sr-only" for="chat-input">پیام شما</label>
+      <input id="chat-input" type="text" maxlength="300" autocomplete="off" placeholder="سؤالتان را بنویسید…">
+      <button type="submit" aria-label="ارسال"><svg class="i" style="transform:scaleX(-1)"><use href="#i-send"/></svg></button>
+    </form>
+    <div class="chat-foot">پاسخ‌ها خودکار هستند؛ برای موارد دقیق با نمایندگی تماس بگیرید.</div>
+  </div>
+  <span class="chat-hint">سؤالی دارید؟ بپرسید</span>
+  <button class="chat-fab" type="button" data-chat-toggle aria-label="گفتگو با دستیار نمایندگی" aria-expanded="false">
+    <svg class="i i-chat"><use href="#i-chat"/></svg>
+    <svg class="i i-close"><use href="#i-close"/></svg>
+  </button>
+</div>

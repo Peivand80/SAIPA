@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ plan.title }} | {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ plan.summary|truncatechars:160 }}{% endblock %}
+
+{% block content %}
+{% url 'warranty:index' as list_url %}
+{% include "includes/page_head.html" with title=plan.title subtitle=plan.summary crumb_label="گارانتی و کارت طلایی" crumb_url=list_url %}
+<section class="section">
+  <div class="container layout-sidebar">
+    <div>
+      <article class="article-body">
+        {% if plan.image %}<div class="article-cover"><img src="{{ plan.image.url }}" alt="{{ plan.title }}"></div>{% endif %}
+        <div class="prose">{{ plan.body|safe }}</div>
+      </article>
+      {% if faqs %}
+        <div class="article-body" style="margin-top:28px">
+          <h2 style="font-size:var(--fs-md)">پرسش‌های متداول {{ plan.title }}</h2>
+          <div class="faq">{% for f in faqs %}<details><summary>{{ f.question }}</summary><div class="answer">{{ f.answer }}</div></details>{% endfor %}</div>
+        </div>
+      {% endif %}
+    </div>
+    <aside class="sidebar">
+      {% if plan.highlights %}
+        <div class="panel"><h3>نکات کلیدی</h3><ul class="check-list">{% for h in plan.highlights|linebreaks_list %}<li>{{ h }}</li>{% endfor %}</ul></div>
+      {% endif %}
+      <div class="panel panel-brand">
+        <h3>سؤال دیگری دارید؟</h3>
+        <p style="font-size:var(--fs-sm)">کارشناس گارانتی نمایندگی راهنمایی‌تان می‌کند.</p>
+        <a class="btn btn-light btn-block" href="{% url 'contact:contact' %}?subject=warranty">ارسال پرسش</a>
+      </div>
+      {% if other_plans %}
+        <div class="panel"><h3>سایر طرح‌ها</h3><ul class="footer-links" style="font-size:var(--fs-sm)">{% for p in other_plans %}<li><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></li>{% endfor %}</ul></div>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+{% endblock %}

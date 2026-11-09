@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{% if category %}{{ category.title }} | {% endif %}مجله خودرو | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% if category %}
+  {% url 'blog:list' as list_url %}
+  {% include "includes/page_head.html" with title=category.title crumb_label="مجله" crumb_url=list_url %}
+{% else %}
+  {% include "includes/page_head.html" with title="مجله خودرو" subtitle="راهنمای نگهداری خودرو، اخبار نمایندگی و نکات فنی" %}
+{% endif %}
+<section class="section">
+  <div class="container">
+    <div class="filter-bar">
+      <div class="chips">
+        <a class="chip{% if not category %} active{% endif %}" href="{% url 'blog:list' %}">همه</a>
+        {% for c in categories %}<a class="chip{% if category == c %} active{% endif %}" href="{{ c.get_absolute_url }}">{{ c.title }}</a>{% endfor %}
+      </div>
+      <form class="search-inline" method="get">
+        <label class="sr-only" for="bq">جستجو در مطالب</label>
+        <input id="bq" type="search" name="q" value="{{ q }}" placeholder="جستجو در مطالب">
+        <button class="btn btn-outline" type="submit">جستجو</button>
+      </form>
+    </div>
+
+    {% if posts %}
+      <div class="grid grid-3">{% for post in posts %}{% include "includes/post_card.html" %}{% endfor %}</div>
+      {% include "includes/pagination.html" %}
+    {% else %}
+      {% if q %}
+        {% include "includes/empty.html" with icon="search" heading="مطلبی پیدا نشد" text="عبارت دیگری را جستجو کنید." %}
+      {% else %}
+        {% include "includes/empty.html" with icon="doc" heading="هنوز مطلبی منتشر نشده" text="مطالب از پنل مدیریت › مطالب نوشته و منتشر می‌شوند." %}
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

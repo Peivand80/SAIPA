@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}جستجو{% if q %}: {{ q }}{% endif %} | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_head.html" with title="جستجو در سایت" %}
+<section class="section">
+  <div class="container" style="max-width:880px">
+    <form method="get" class="filter-form" style="grid-template-columns:1fr auto" role="search">
+      <label class="sr-only" for="q">عبارت جستجو</label>
+      <input id="q" type="search" name="q" value="{{ q }}" placeholder="نام خودرو، قطعه، کد فنی یا موضوع مطلب" autofocus>
+      <button class="btn btn-primary" type="submit">جستجو</button>
+    </form>
+
+    {% if q|length >= 2 %}
+      <p class="result-count">{{ total|fa_num }} نتیجه برای «{{ q }}»</p>
+      {% if page_obj.object_list %}
+        <div style="display:grid;gap:14px">
+          {% for r in page_obj.object_list %}
+            <a class="card" href="{{ r.url }}" style="flex-direction:row;color:inherit">
+              <span class="card-media" style="flex:0 0 160px;aspect-ratio:4/3">
+                <img src="{% if r.image %}{{ r.image.url }}{% else %}{% static 'img/placeholder.svg' %}{% endif %}" alt="" loading="lazy">
+              </span>
+              <span class="card-body">
+                <span class="tag" style="align-self:flex-start">{{ r.kind }}</span>
+                <h3>{{ r.title }}</h3>
+                <p>{{ r.summary|striptags|truncatewords:26 }}</p>
+              </span>
+            </a>
+          {% endfor %}
+        </div>
+        {% include "includes/pagination.html" %}
+      {% else %}
+        {% include "includes/empty.html" with icon="search" heading="نتیجه‌ای پیدا نشد" text="عبارت دیگری را امتحان کنید یا برای استعلام قطعه فرم استعلام را پر کنید." link_url="/parts/inquiry/" link_label="استعلام قطعه" %}
+      {% endif %}
+    {% elif q %}
+      <p class="result-count">عبارت جستجو باید حداقل ۲ حرف باشد.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

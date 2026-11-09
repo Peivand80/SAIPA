@@ -1,0 +1,54 @@
+{% comment %}
+  بخش نظرات مشترک. نیازمند متغیرهای comment_page, comments_count, comment_form, comments_enabled
+  (همه توسط CommentableMixin فراهم می‌شوند).
+{% endcomment %}
+<section class="comments" id="comments" aria-labelledby="comments-title">
+  <div class="comments-head">
+    <h2 id="comments-title">نظرات کاربران</h2>
+    <span>{{ comments_count|fa_num }} نظر</span>
+  </div>
+
+  {% if comment_page.object_list %}
+    <ol class="comment-list">
+      {% for c in comment_page.object_list %}
+        <li class="comment" id="comment-{{ c.pk }}">
+          <div class="comment-top">
+            <span class="avatar" aria-hidden="true">{{ c.name|slice:":1" }}</span>
+            <div>
+              <strong>{{ c.name }}</strong>
+              <time datetime="{{ c.created_at|date:'c' }}">{{ c.created_at|jdate }}</time>
+            </div>
+          </div>
+          <p class="comment-body">{{ c.body }}</p>
+          {% if c.admin_reply %}
+            <div class="comment-reply">
+              <strong>پاسخ {{ site.site_name }}</strong>
+              {{ c.admin_reply|linebreaksbr }}
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+    {% include "includes/pagination.html" with page_obj=comment_page param="cpage" anchor="#comments" %}
+  {% else %}
+    <p style="color:var(--muted);margin-bottom:28px">هنوز نظری ثبت نشده است. اولین نفری باشید که نظر می‌دهد.</p>
+  {% endif %}
+
+  {% if comments_enabled %}
+    <form class="comment-form" method="post" action="#comments" novalidate>
+      {% csrf_token %}
+      <h3>ثبت نظر</h3>
+      <p>نظر شما پس از بررسی و تأیید مدیر سایت منتشر می‌شود. نیازی به ثبت‌نام نیست.</p>
+      <div class="hp-field" aria-hidden="true">{{ comment_form.website }}</div>
+      {% for error in comment_form.non_field_errors %}<div class="alert alert-error">{{ error }}</div>{% endfor %}
+      <div class="form-grid">
+        {% include "includes/field.html" with field=comment_form.name %}
+        {% include "includes/field.html" with field=comment_form.email %}
+        {% include "includes/field.html" with field=comment_form.body span=True %}
+      </div>
+      <div style="margin-top:18px"><button class="btn btn-primary" type="submit">ارسال نظر</button></div>
+    </form>
+  {% else %}
+    <p class="notice"><svg class="i"><use href="#i-info"/></svg>امکان ثبت نظر برای این بخش بسته شده است.</p>
+  {% endif %}
+</section>

@@ -1,0 +1,18 @@
+{% comment %} نوار ویدیویی تمام‌عرض. نیازمند band_video و site {% endcomment %}
+{% if band_video %}
+<section class="video-band" aria-label="{{ band_video.title }}">
+  <video src="{{ band_video.url }}" {% if band_video.poster %}poster="{{ band_video.poster }}"{% endif %} muted autoplay loop playsinline preload="metadata" data-autoplay aria-hidden="true"></video>
+  <div class="container">
+    <div class="video-band-copy" data-reveal>
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span>{{ band_video.title }}</span>
+      <h2>به نمایندگی ما سر بزنید</h2>
+      <p>سالن فروش، واحد پذیرش و تعمیرگاه مجهز؛ همه خدمات سایپا در یک مجموعه.</p>
+      {% if site.address %}<div class="addr"><svg class="i"><use href="#i-pin"/></svg><span>{{ site.address }}{% if site.working_hours %}<br><small style="color:#B8BBC2">{{ site.working_hours|linebreaks_list|first }}</small>{% endif %}</span></div>{% endif %}
+      <div class="actions">
+        {% if site.appointment_enabled %}<a class="btn btn-primary" href="{% url 'services:appointment' %}">رزرو نوبت</a>{% endif %}
+        <a class="btn btn-ghost-light" href="{% url 'contact:contact' %}">مسیر و اطلاعات تماس</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}

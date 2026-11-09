@@ -1,0 +1,57 @@
+{% load static %}
+<div class="topbar">
+  <div class="container">
+    <div class="topbar-info">
+      {% if site.phone %}<span><svg class="i"><use href="#i-phone"/></svg><a href="tel:{{ site.phone }}" class="ltr">{{ site.phone|fa_num }}</a></span>{% endif %}
+      {% if site.working_hours %}<span class="hide-sm"><svg class="i"><use href="#i-clock"/></svg>{{ site.working_hours|linebreaks_list|first }}</span>{% endif %}
+      {% if site.dealer_code %}<span class="hide-sm">کد نمایندگی {{ site.dealer_code|fa_num }}</span>{% endif %}
+    </div>
+    <div class="topbar-social">
+      <a href="{% url 'services:track' %}">پیگیری نوبت</a>
+      <a href="{% url 'parts:inquiry' %}">استعلام قطعه</a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header" data-header>
+  <div class="container">
+    <a class="brand" href="{% url 'core:home' %}" aria-label="{{ site.site_name }} - صفحه اصلی">
+      <img class="brand-logo" src="{% if site.logo %}{{ site.logo.url }}{% else %}{% static 'img/logo-saipa.png' %}{% endif %}" alt="سایپا" width="114" height="40">
+      <span class="brand-text">
+        <strong>{{ site.site_name }}</strong>
+        {% if site.slogan %}<small>{{ site.slogan }}</small>{% endif %}
+      </span>
+    </a>
+
+    <nav class="main-nav" id="main-nav" aria-label="منوی اصلی">
+      <ul>
+        {% for item in nav_items %}
+          <li><a href="{% url item.url_name %}" class="{% if item.active %}active{% endif %}" {% if item.active %}aria-current="page"{% endif %}>{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="تغییر حالت روشن و تیره" title="حالت روشن / تیره">
+        <svg class="i i-sun"><use href="#i-sun"/></svg>
+        <svg class="i i-moon"><use href="#i-moon"/></svg>
+      </button>
+      <button class="icon-btn" type="button" data-toggle="search" aria-label="جستجو" aria-expanded="false" aria-controls="search-panel">
+        <svg class="i"><use href="#i-search"/></svg>
+      </button>
+      {% if site.appointment_enabled %}<a class="btn btn-primary" href="{% url 'services:appointment' %}"><svg class="i"><use href="#i-calendar"/></svg>نوبت تعمیرگاه</a>{% endif %}
+      <button class="icon-btn nav-toggle" type="button" data-toggle="nav" aria-label="منو" aria-expanded="false" aria-controls="main-nav">
+        <svg class="i"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="search-panel" id="search-panel">
+    <div class="container">
+      <form action="{% url 'core:search' %}" method="get" role="search">
+        <label class="sr-only" for="site-search">جستجو در سایت</label>
+        <input id="site-search" type="search" name="q" placeholder="جستجوی خودرو، قطعه، خدمت یا مطلب..." value="{{ q|default:'' }}">
+        <button class="btn btn-primary" type="submit">جستجو</button>
+      </form>
+    </div>
+  </div>
+</header>

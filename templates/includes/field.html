@@ -1,0 +1,7 @@
+{% comment %} نمایش یک فیلد فرم با برچسب و خطا: {% include "includes/field.html" with field=form.name %} {% endcomment %}
+<div class="field{% if field.errors %} has-error{% endif %}{% if span %} span-2{% endif %}">
+  <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="req" aria-hidden="true">*</span>{% endif %}</label>
+  {{ field }}
+  {% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}
+  {% for error in field.errors %}<div class="error">{{ error }}</div>{% endfor %}
+</div>

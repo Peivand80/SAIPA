@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}محصولات سایپا | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_head.html" with title="محصولات" subtitle="مشخصات فنی، رنگ‌بندی و شرایط فروش خودروهای سایپا" %}
+<section class="section">
+  <div class="container">
+    <div class="filter-bar">
+      <div class="chips">
+        <a class="chip{% if not current_category %} active{% endif %}" href="?{% url_replace category='' page='' %}">همه</a>
+        {% for c in categories %}
+          <a class="chip{% if c.slug == current_category %} active{% endif %}" href="?{% url_replace category=c.slug page='' %}">{{ c.title }}</a>
+        {% endfor %}
+      </div>
+      <form class="search-inline" method="get">
+        {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
+        <label class="sr-only" for="car-q">جستجوی خودرو</label>
+        <input id="car-q" type="search" name="q" value="{{ q }}" placeholder="جستجوی نام خودرو">
+        <button class="btn btn-outline" type="submit">جستجو</button>
+      </form>
+    </div>
+
+    {% if cars %}
+      <div class="grid grid-3">{% for car in cars %}{% include "includes/car_card.html" %}{% endfor %}</div>
+      {% include "includes/pagination.html" %}
+    {% else %}
+      {% include "includes/empty.html" with icon="car" heading="خودرویی پیدا نشد" text="فیلتر را تغییر دهید یا همه محصولات را ببینید." link_url="?" link_label="نمایش همه" %}
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

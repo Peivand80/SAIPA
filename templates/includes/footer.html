@@ -1,0 +1,55 @@
+{% load static %}
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="{% url 'core:home' %}">
+          <img class="brand-logo" src="{% if site.logo %}{{ site.logo.url }}{% else %}{% static 'img/logo-saipa.png' %}{% endif %}" alt="سایپا" loading="lazy">
+          <span class="brand-text"><strong>{{ site.site_name }}</strong>{% if site.dealer_code %}<small>کد نمایندگی {{ site.dealer_code|fa_num }}</small>{% endif %}</span>
+        </a>
+        <p>{% if site.about_summary %}{{ site.about_summary|truncatewords:40 }}{% else %}نمایندگی رسمی فروش، خدمات پس از فروش و قطعات یدکی اصلی سایپا.{% endif %}</p>
+        {% if site.social_links %}
+          <div class="social">
+            {% for s in site.social_links %}<a href="{{ s.url }}" target="_blank" rel="noopener" aria-label="{{ s.label }}"><svg class="i"><use href="#i-{{ s.key }}"/></svg></a>{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div>
+        <h4>دسترسی سریع</h4>
+        <ul class="footer-links">
+          <li><a href="{% url 'catalog:list' %}">محصولات</a></li>
+          <li><a href="{% url 'services:appointment' %}">نوبت‌دهی آنلاین</a></li>
+          <li><a href="{% url 'services:track' %}">پیگیری نوبت</a></li>
+          <li><a href="{% url 'parts:list' %}">قطعات یدکی</a></li>
+          <li><a href="{% url 'warranty:index' %}">گارانتی و کارت طلایی</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>اطلاعات</h4>
+        <ul class="footer-links">
+          <li><a href="{% url 'blog:list' %}">مجله خودرو</a></li>
+          <li><a href="{% url 'core:about' %}">درباره ما</a></li>
+          <li><a href="{% url 'contact:contact' %}">تماس با ما</a></li>
+          {% for p in footer_pages %}<li><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></li>{% endfor %}
+        </ul>
+      </div>
+
+      <div>
+        <h4>تماس</h4>
+        <ul class="footer-links footer-contact">
+          {% if site.address %}<li><svg class="i"><use href="#i-pin"/></svg><span>{{ site.address }}</span></li>{% endif %}
+          {% if site.phone %}<li><svg class="i"><use href="#i-phone"/></svg><a href="tel:{{ site.phone }}" class="ltr">{{ site.phone|fa_num }}</a></li>{% endif %}
+          {% if site.mobile %}<li><svg class="i"><use href="#i-phone"/></svg><a href="tel:{{ site.mobile }}" class="ltr">{{ site.mobile|fa_num }}</a></li>{% endif %}
+          {% if site.email %}<li><svg class="i"><use href="#i-mail"/></svg><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>{% endif %}
+          {% if site.working_hours %}<li><svg class="i"><use href="#i-clock"/></svg><span>{{ site.working_hours }}</span></li>{% endif %}
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>{% if site.footer_text %}{{ site.footer_text }}{% else %}© {% jalali_year %} — تمامی حقوق برای {{ site.site_name }} محفوظ است.{% endif %}</span>
+      <span class="dev-credit">طراحی و توسعه: <strong dir="ltr" style="color:#fff">Ali Peivand</strong> — <a href="tel:09360917822" class="ltr">{{ "09360917822"|fa_num }}</a></span>
+    </div>
+  </div>
+</footer>

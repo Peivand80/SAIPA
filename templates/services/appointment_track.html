@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}پیگیری نوبت | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_head.html" with title="پیگیری نوبت" subtitle="کد پیگیری و شماره موبایلی که هنگام ثبت نوبت وارد کردید را بنویسید." %}
+<section class="section">
+  <div class="container" style="max-width:720px">
+    <form class="form-card" method="post" novalidate>
+      {% csrf_token %}
+      <div class="form-grid">
+        {% include "includes/field.html" with field=form.code %}
+        {% include "includes/field.html" with field=form.phone %}
+      </div>
+      <div style="margin-top:20px"><button class="btn btn-primary" type="submit">نمایش وضعیت</button></div>
+    </form>
+
+    {% if searched %}
+      <div style="margin-top:28px">
+        {% if appointment %}
+          <div class="receipt">
+            <div class="receipt-code"><small>کد پیگیری</small><strong>{{ appointment.tracking_code|fa_num }}</strong></div>
+            {% include "services/_appointment_details.html" %}
+          </div>
+        {% else %}
+          {% include "includes/empty.html" with icon="search" heading="نوبتی با این مشخصات پیدا نشد" text="کد پیگیری و شماره موبایل را دوباره بررسی کنید. در صورت نیاز با پذیرش تماس بگیرید." %}
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

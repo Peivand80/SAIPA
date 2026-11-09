@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}نوبت ثبت شد | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="receipt">
+      <div class="receipt-head">
+        <svg class="i"><use href="#i-check"/></svg>
+        <h1>نوبت شما ثبت شد</h1>
+        <p style="margin:6px 0 0">پس از بررسی، کارشناس پذیرش وضعیت نوبت را تأیید می‌کند.</p>
+      </div>
+      <div class="receipt-code">
+        <small>کد پیگیری</small>
+        <strong>{{ appointment.tracking_code|fa_num }}</strong>
+      </div>
+      {% include "services/_appointment_details.html" %}
+      <div class="receipt-foot">
+        <button class="btn btn-outline" type="button" onclick="window.print()">چاپ رسید</button>
+        <a class="btn btn-primary" href="{% url 'services:track' %}">پیگیری نوبت</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load static %}
+<article class="card part-card">
+  <a class="card-media contain" href="{{ part.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+    <img src="{% if part.image %}{{ part.image.url }}{% else %}{% static 'img/placeholder-part.svg' %}{% endif %}" alt="{{ part.title }}" loading="lazy">
+  </a>
+  <div class="card-body">
+    <h3><a href="{{ part.get_absolute_url }}">{{ part.title }}</a></h3>
+    {% if part.code %}<span class="code" style="align-self:flex-start">{{ part.code }}</span>{% endif %}
+    <div class="card-meta">
+      <span class="stock stock-{{ part.stock }}">{{ part.get_stock_display }}</span>
+      {% if part.is_genuine %}<span class="tag tag-green">اصلی</span>{% endif %}
+    </div>
+  </div>
+  <div class="card-foot">
+    <span class="price-tag">{% if part.price %}{{ part.price|money }} تومان{% else %}استعلام بگیرید{% endif %}</span>
+    <a href="{{ part.get_absolute_url }}" class="more-link">جزئیات</a>
+  </div>
+</article>

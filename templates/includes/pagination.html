@@ -1,0 +1,32 @@
+{% comment %}
+  صفحه‌بندی مشترک. استفاده: {% include "includes/pagination.html" with page_obj=page_obj %}
+  برای صفحه‌بندی با پارامتر دیگر (مثل نظرات): with param="cpage" anchor="#comments"
+{% endcomment %}
+{% if page_obj.has_other_pages %}
+{% with p=param|default:"page" %}
+<nav class="pagination" aria-label="صفحه‌بندی">
+  {% if page_obj.has_previous %}
+    <a href="?{% if p == 'cpage' %}{% url_replace cpage=page_obj.previous_page_number %}{% else %}{% url_replace page=page_obj.previous_page_number %}{% endif %}{{ anchor|default:'' }}" rel="prev">قبلی</a>
+  {% else %}
+    <span class="disabled">قبلی</span>
+  {% endif %}
+
+  {% for num in page_obj.paginator.page_range %}
+    {% if num == page_obj.number %}
+      <span class="current" aria-current="page">{{ num|fa_num }}</span>
+    {% elif num == 1 or num == page_obj.paginator.num_pages or num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+      <a href="?{% if p == 'cpage' %}{% url_replace cpage=num %}{% else %}{% url_replace page=num %}{% endif %}{{ anchor|default:'' }}">{{ num|fa_num }}</a>
+    {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+      <span class="gap">…</span>
+    {% endif %}
+  {% endfor %}
+
+  {% if page_obj.has_next %}
+    <a href="?{% if p == 'cpage' %}{% url_replace cpage=page_obj.next_page_number %}{% else %}{% url_replace page=page_obj.next_page_number %}{% endif %}{{ anchor|default:'' }}" rel="next">بعدی</a>
+  {% else %}
+    <span class="disabled">بعدی</span>
+  {% endif %}
+</nav>
+<p class="pagination-info">صفحه {{ page_obj.number|fa_num }} از {{ page_obj.paginator.num_pages|fa_num }}</p>
+{% endwith %}
+{% endif %}

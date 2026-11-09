@@ -1,0 +1,13 @@
+<form class="form-card" method="post" novalidate id="inquiry">
+  {% csrf_token %}
+  <div class="hp-field" aria-hidden="true">{{ form.website }}</div>
+  <div class="form-grid">
+    {% include "includes/field.html" with field=form.part_name %}
+    {% include "includes/field.html" with field=form.car_model %}
+    {% include "includes/field.html" with field=form.full_name %}
+    {% include "includes/field.html" with field=form.phone %}
+    {% include "includes/field.html" with field=form.message span=True %}
+  </div>
+  <datalist id="car-models">{% for m in car_models %}<option value="{{ m }}">{% endfor %}</datalist>
+  <div style="margin-top:20px"><button class="btn btn-primary" type="submit">ارسال استعلام</button></div>
+</form>

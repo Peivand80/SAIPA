@@ -1,0 +1,5 @@
+<button type="button" class="like-btn{% if liked %} liked{% endif %}" data-like data-target="{{ target }}" data-id="{{ object_id }}" aria-pressed="{% if liked %}true{% else %}false{% endif %}" aria-label="پسندیدن">
+  <svg class="i"><use href="#i-heart"/></svg>
+  <span data-like-count>{{ count|fa_num }}</span>
+  <span>پسندیدم</span>
+</button>

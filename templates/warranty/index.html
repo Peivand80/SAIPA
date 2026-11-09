@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}گارانتی و کارت طلایی | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_head.html" with title="گارانتی و کارت طلایی" subtitle="شرایط پوشش، مدارک لازم و تعهدات خدمات پس از فروش" %}
+<section class="section">
+  <div class="container">
+    {% if plans %}
+      <div class="grid grid-3">
+        {% for plan in plans %}
+          <article class="plan-card">
+            <span class="service-icon"><svg class="i i-lg"><use href="#i-{{ plan.icon }}"/></svg></span>
+            <h3>{{ plan.title }}</h3>
+            <p>{{ plan.summary }}</p>
+            {% if plan.highlights %}<ul class="check-list">{% for h in plan.highlights|linebreaks_list %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
+            <a class="btn btn-outline btn-sm" href="{{ plan.get_absolute_url }}">شرایط کامل</a>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      {% include "includes/empty.html" with icon="shield" heading="اطلاعات گارانتی هنوز ثبت نشده" text="طرح‌های گارانتی و کارت طلایی را از پنل مدیریت اضافه کنید." %}
+    {% endif %}
+
+    {% if faqs %}
+      <div class="article-body" style="margin-top:48px">
+        <h2 style="font-size:var(--fs-md)">پرسش‌های متداول</h2>
+        <div class="faq">{% for f in faqs %}<details><summary>{{ f.question }}</summary><div class="answer">{{ f.answer }}</div></details>{% endfor %}</div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

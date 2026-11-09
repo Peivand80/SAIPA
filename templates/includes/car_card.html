@@ -1,0 +1,15 @@
+{% load static %}
+<article class="card">
+  <a class="card-media" href="{{ car.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+    <img src="{% if car.image %}{{ car.image.url }}{% else %}{% static 'img/placeholder-car.svg' %}{% endif %}" alt="{{ car.title }}" loading="lazy">
+  </a>
+  <div class="card-body">
+    {% if car.category %}<span class="tag tag-muted" style="align-self:flex-start">{{ car.category }}</span>{% endif %}
+    <h3><a href="{{ car.get_absolute_url }}">{{ car.title }}</a></h3>
+    <p>{{ car.summary|truncatewords:22 }}</p>
+  </div>
+  <div class="card-foot">
+    <span class="price-tag">{{ car.price_text|default:"تماس بگیرید" }}</span>
+    <a href="{{ car.get_absolute_url }}" class="more-link">مشخصات</a>
+  </div>
+</article>

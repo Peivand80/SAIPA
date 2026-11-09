@@ -1,0 +1,15 @@
+{% load static %}
+<article class="card">
+  <a class="card-media" href="{{ post.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+    <img src="{% if post.cover %}{{ post.cover.url }}{% else %}{% static 'img/placeholder.svg' %}{% endif %}" alt="{{ post.title }}" loading="lazy">
+  </a>
+  <div class="card-body">
+    {% if post.category %}<a class="tag" style="align-self:flex-start" href="{{ post.category.get_absolute_url }}">{{ post.category }}</a>{% endif %}
+    <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+    <p>{{ post.summary|truncatewords:24 }}</p>
+    <div class="card-meta">
+      <span><svg class="i"><use href="#i-calendar"/></svg>{{ post.published_at|jdate }}</span>
+      <span><svg class="i"><use href="#i-clock"/></svg>{{ post.reading_time|fa_num }} دقیقه مطالعه</span>
+    </div>
+  </div>
+</article>

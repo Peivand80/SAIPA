@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load interactions %}
+{% block title %}{{ service.title }} | {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ service.summary|truncatechars:160 }}{% endblock %}
+
+{% block content %}
+{% url 'services:list' as list_url %}
+{% include "includes/page_head.html" with title=service.title subtitle=service.summary crumb_label="خدمات" crumb_url=list_url %}
+<section class="section">
+  <div class="container layout-sidebar">
+    <div>
+      <article class="article-body">
+        {% if service.image %}<div class="article-cover"><img src="{{ service.image.url }}" alt="{{ service.title }}"></div>{% endif %}
+        {% if service.body %}<div class="prose">{{ service.body|safe }}</div>{% else %}<p class="lead" style="border:0;margin:0;padding:0">{{ service.summary }}</p>{% endif %}
+        <div class="engage-bar">{% like_button service %}</div>
+      </article>
+      {% include "interactions/comments.html" %}
+    </div>
+    <aside class="sidebar">
+      {% if service.bookable and site.appointment_enabled %}
+        <div class="panel panel-brand">
+          <h3>رزرو نوبت {{ service.title }}</h3>
+          <p style="font-size:var(--fs-sm)">روز و ساعت مراجعه را خودتان انتخاب کنید.</p>
+          <a class="btn btn-light btn-block" href="{% url 'services:appointment' %}?service={{ service.slug }}">رزرو نوبت</a>
+        </div>
+      {% endif %}
+      {% if other_services %}
+        <div class="panel">
+          <h3>سایر خدمات</h3>
+          <ul class="footer-links" style="font-size:var(--fs-sm)">{% for s in other_services %}<li><a href="{{ s.get_absolute_url }}">{{ s.title }}</a></li>{% endfor %}</ul>
+        </div>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+{% endblock %}

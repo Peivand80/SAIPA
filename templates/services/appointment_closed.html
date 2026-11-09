@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}نوبت‌دهی آنلاین | {{ site.site_name }}{% endblock %}
+{% block content %}
+{% include "includes/page_head.html" with title="نوبت‌دهی آنلاین" %}
+<section class="section"><div class="container" style="max-width:720px">
+  {% include "includes/empty.html" with icon="calendar" heading="نوبت‌دهی آنلاین موقتاً غیرفعال است" text="برای رزرو نوبت با پذیرش نمایندگی تماس بگیرید." link_url="/contact/" link_label="اطلاعات تماس" %}
+</div></section>
+{% endblock %}

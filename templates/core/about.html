@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ site.about_title }} | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_head.html" with title=site.about_title subtitle=site.slogan %}
+
+<section class="section">
+  <div class="container layout-sidebar">
+    <div class="article-body">
+      <div class="article-cover"><img src="{% if site.about_image %}{{ site.about_image.url }}{% else %}{{ about_image }}{% endif %}" alt="{{ site.about_title }}"></div>
+      {% if site.about_summary %}<p class="lead">{{ site.about_summary }}</p>{% endif %}
+      {% if site.about_body %}
+        <div class="prose">{{ site.about_body|safe }}</div>
+      {% elif not site.about_summary %}
+        {% include "includes/empty.html" with icon="info" heading="متن درباره ما هنوز نوشته نشده" text="از پنل مدیریت › تنظیمات سایت › بخش «درباره ما» این متن را تکمیل کنید." %}
+      {% endif %}
+    </div>
+
+    <aside class="sidebar">
+      <div class="panel">
+        <h3>اطلاعات نمایندگی</h3>
+        <ul class="contact-list">
+          {% if site.dealer_code %}<li><span class="ic"><svg class="i"><use href="#i-doc"/></svg></span><div><small>کد نمایندگی</small><strong>{{ site.dealer_code|fa_num }}</strong></div></li>{% endif %}
+          {% if site.address %}<li><span class="ic"><svg class="i"><use href="#i-pin"/></svg></span><div><small>آدرس</small><strong>{{ site.address }}</strong></div></li>{% endif %}
+          {% if site.working_hours %}<li><span class="ic"><svg class="i"><use href="#i-clock"/></svg></span><div><small>ساعات کاری</small><strong>{{ site.working_hours }}</strong></div></li>{% endif %}
+        </ul>
+      </div>
+      <a class="btn btn-primary btn-block" href="{% url 'contact:contact' %}">تماس با نمایندگی</a>
+    </aside>
+  </div>
+</section>
+
+{% include "includes/video_band.html" %}
+
+<section class="section">
+  <div class="container">
+    <div class="section-head" data-reveal><div><h2>فضای نمایندگی</h2><p>سالن فروش، پذیرش و تعمیرگاه</p></div></div>
+    <div class="mosaic">
+      {% for p in photos|slice:":4" %}<figure data-reveal style="--i:{{ forloop.counter0 }}"><img src="{{ p.url }}" alt="{{ p.caption }}" loading="lazy">{% if p.caption %}<figcaption>{{ p.caption }}</figcaption>{% endif %}</figure>{% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if team %}
+<section class="section section-white">
+  <div class="container">
+    <div class="section-head"><div><h2>تیم ما</h2><p>همکارانی که در فروش و خدمات همراه شما هستند</p></div></div>
+    <div class="grid grid-4">
+      {% for m in team %}
+        <div class="team-card" data-reveal style="--i:{{ forloop.counter0 }}">
+          <div class="team-photo">{% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% else %}{{ m.name|slice:":1" }}{% endif %}</div>
+          <strong>{{ m.name }}</strong>
+          <span>{{ m.role }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

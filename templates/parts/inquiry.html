@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}استعلام قطعه یدکی | {{ site.site_name }}{% endblock %}
+{% block content %}
+{% url 'parts:list' as list_url %}
+{% include "includes/page_head.html" with title="استعلام قطعه" subtitle="کارشناس قطعات پس از بررسی، قیمت و موجودی را با شما هماهنگ می‌کند." crumb_label="قطعات یدکی" crumb_url=list_url %}
+<section class="section">
+  <div class="container" style="max-width:820px">{% include "parts/_inquiry_form.html" %}</div>
+</section>
+{% endblock %}

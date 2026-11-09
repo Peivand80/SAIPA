@@ -1,0 +1,51 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ site.site_name }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ site.meta_description|default:site.slogan }}{% endblock %}">
+  <meta name="theme-color" content="#131416">
+  <script>
+    /* اعمال حالت روشن/تیره قبل از نمایش صفحه (جلوگیری از چشمک‌زدن) */
+    (function () {
+      var d = document.documentElement, t = null;
+      try { t = localStorage.getItem("saipa-theme"); } catch (e) {}
+      d.setAttribute("data-theme", t === "light" ? "light" : "dark");
+      d.classList.add("js");
+    })();
+  </script>
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}{{ site.site_name }}{% endblock %}">
+  <meta property="og:site_name" content="{{ site.site_name }}">
+  <meta property="og:locale" content="fa_IR">
+  {% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% if site.logo %}{{ site.logo.url }}{% else %}{% static 'img/logo-saipa.png' %}{% endif %}">{% endblock %}
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+  {% if site.favicon %}<link rel="icon" href="{{ site.favicon.url }}">{% else %}<link rel="icon" href="{% static 'img/favicon-64.png' %}" type="image/png"><link rel="apple-touch-icon" href="{% static 'img/favicon.png' %}">{% endif %}
+  <link rel="preload" href="{% static 'fonts/Vazirmatn-Variable.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% include "includes/icons.html" %}
+  <div class="bg-decor" aria-hidden="true"><span class="lines"></span><span class="glow glow-1"></span><span class="glow glow-2"></span></div>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <a class="sr-only" href="#main">رفتن به محتوای اصلی</a>
+
+  {% include "includes/header.html" %}
+
+  <main id="main">
+    {% include "includes/messages.html" %}
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include "includes/footer.html" %}
+
+  {% block chatbot %}{% endblock %}
+  <button class="to-top" type="button" data-to-top aria-label="بازگشت به بالای صفحه"><svg class="i"><use href="#i-go"/></svg></button>
+
+  <script src="{% static 'js/main.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

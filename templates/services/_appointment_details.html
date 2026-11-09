@@ -1,0 +1,9 @@
+<dl class="kv">
+  <dt>وضعیت</dt><dd><span class="status status-{{ appointment.status }}">{{ appointment.get_status_display }}</span></dd>
+  <dt>نام</dt><dd>{{ appointment.full_name }}</dd>
+  <dt>خودرو</dt><dd>{{ appointment.car_model }}{% if appointment.plate_number %} — پلاک {{ appointment.plate_number|fa_num }}{% endif %}</dd>
+  <dt>خدمت</dt><dd>{{ appointment.service|default:"—" }}</dd>
+  <dt>روز مراجعه</dt><dd>{{ appointment.date|weekday_fa }} {{ appointment.date|jdate }}</dd>
+  <dt>ساعت</dt><dd>{{ appointment.slot|fa_num|default:"—" }}</dd>
+  {% if appointment.admin_note %}<dt>پیام پذیرش</dt><dd>{{ appointment.admin_note|linebreaksbr }}</dd>{% endif %}
+</dl>

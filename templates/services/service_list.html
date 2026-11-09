@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}خدمات پس از فروش | {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_head.html" with title="خدمات پس از فروش" subtitle="تعمیرات، سرویس دوره‌ای، عیب‌یابی و سایر خدمات تخصصی نمایندگی" %}
+<section class="section">
+  <div class="container">
+    {% if services %}
+      <div class="grid grid-3">
+        {% for s in services %}
+          <article class="card">
+            {% if s.image %}<a class="card-media" href="{{ s.get_absolute_url }}" tabindex="-1" aria-hidden="true"><img src="{{ s.image.url }}" alt="" loading="lazy"></a>{% endif %}
+            <div class="card-body">
+              {% if not s.image %}<span class="service-icon"><svg class="i i-lg"><use href="#i-{{ s.icon }}"/></svg></span>{% endif %}
+              <h3><a href="{{ s.get_absolute_url }}">{{ s.title }}</a></h3>
+              <p>{{ s.summary }}</p>
+            </div>
+            <div class="card-foot">
+              <a href="{{ s.get_absolute_url }}" class="more-link">توضیحات</a>
+              {% if s.bookable and site.appointment_enabled %}<a class="btn btn-primary btn-sm" href="{% url 'services:appointment' %}?service={{ s.slug }}">نوبت بگیرید</a>{% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+      {% include "includes/pagination.html" %}
+    {% else %}
+      {% include "includes/empty.html" with icon="wrench" heading="هنوز خدمتی ثبت نشده است" text="خدمات نمایندگی از پنل مدیریت اضافه می‌شوند." %}
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

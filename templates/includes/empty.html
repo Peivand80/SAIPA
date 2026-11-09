@@ -1,0 +1,6 @@
+<div class="empty">
+  <svg class="i"><use href="#i-{{ icon|default:'info' }}"/></svg>
+  <h3>{{ heading }}</h3>
+  {% if text %}<p>{{ text }}</p>{% endif %}
+  {% if link_url %}<a class="btn btn-outline" href="{{ link_url }}">{{ link_label }}</a>{% endif %}
+</div>

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load interactions %}
+{% block title %}{{ post.title }} | {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ post.meta_description|default:post.summary|truncatechars:160 }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_image %}{% if post.cover %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.cover.url }}">{% endif %}{% endblock %}
+
+{% block content %}
+<section class="page-head" style="--head-img: url('{% if post.cover %}{{ post.cover.url }}{% else %}{{ page_head_image }}{% endif %}')">
+  <div class="container article-head">
+    <ol class="breadcrumb">
+      <li><a href="{% url 'core:home' %}">خانه</a></li>
+      <li><a href="{% url 'blog:list' %}">مجله</a></li>
+      {% if post.category %}<li><a href="{{ post.category.get_absolute_url }}">{{ post.category }}</a></li>{% endif %}
+    </ol>
+    {% if post.status != "published" %}<p class="notice">این مطلب پیش‌نویس است و فقط مدیران آن را می‌بینند.</p>{% endif %}
+    <h1>{{ post.title }}</h1>
+    <div class="article-meta">
+      <span><svg class="i"><use href="#i-calendar"/></svg>{{ post.published_at|jdate }}</span>
+      <span><svg class="i"><use href="#i-clock"/></svg>{{ post.reading_time|fa_num }} دقیقه مطالعه</span>
+      <span><svg class="i"><use href="#i-eye"/></svg>{{ post.views|fa_num }} بازدید</span>
+      <span><svg class="i"><use href="#i-comment"/></svg>{{ comments_count|fa_num }} نظر</span>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container layout-sidebar">
+    <div>
+      <article class="article-body">
+        {% if post.cover %}<div class="article-cover"><img src="{{ post.cover.url }}" alt="{{ post.title }}"></div>{% endif %}
+        <p class="lead">{{ post.summary }}</p>
+        <div class="prose">{{ post.body|safe }}</div>
+        <div class="engage-bar">
+          {% like_button post %}
+          <div class="share">
+            <span>اشتراک‌گذاری:</span>
+            <a class="icon-btn" href="https://t.me/share/url?url={{ share_url|urlencode }}&text={{ post.title|urlencode }}" target="_blank" rel="noopener" aria-label="تلگرام"><svg class="i"><use href="#i-telegram"/></svg></a>
+            <a class="icon-btn" href="https://wa.me/?text={{ post.title|urlencode }}%20{{ share_url|urlencode }}" target="_blank" rel="noopener" aria-label="واتساپ"><svg class="i"><use href="#i-whatsapp"/></svg></a>
+            <button class="icon-btn" type="button" data-copy="{{ share_url }}" aria-label="کپی لینک"><svg class="i"><use href="#i-link"/></svg></button>
+          </div>
+        </div>
+      </article>
+      {% include "interactions/comments.html" %}
+    </div>
+
+    <aside class="sidebar">
+      {% if related %}
+        <div class="panel">
+          <h3>مطالب مرتبط</h3>
+          <ul class="footer-links" style="font-size:var(--fs-sm);gap:12px">
+            {% for r in related %}<li><a href="{{ r.get_absolute_url }}">{{ r.title }}</a><br><small style="color:var(--muted)">{{ r.published_at|jdate }}</small></li>{% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      <div class="panel panel-brand">
+        <h3>زمان سرویس خودروتان رسیده؟</h3>
+        <p style="font-size:var(--fs-sm)">بدون معطلی، نوبت تعمیرگاه را آنلاین رزرو کنید.</p>
+        <a class="btn btn-light btn-block" href="{% url 'services:appointment' %}">رزرو نوبت</a>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

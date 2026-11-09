@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}صفحه پیدا نشد | {{ site.site_name }}{% endblock %}
+{% block content %}
+<section class="container error-page">
+  <div class="code-big">{{ 404|fa_num }}</div>
+  <h1>صفحه‌ای که دنبالش بودید پیدا نشد</h1>
+  <p style="color:var(--muted)">ممکن است آدرس اشتباه وارد شده یا این صفحه حذف شده باشد.</p>
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:24px">
+    <a class="btn btn-primary" href="{% url 'core:home' %}">بازگشت به صفحه اصلی</a>
+    <a class="btn btn-outline" href="{% url 'core:search' %}">جستجو در سایت</a>
+  </div>
+</section>
+{% endblock %}

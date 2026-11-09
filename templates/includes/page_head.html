@@ -1,0 +1,13 @@
+{% comment %} سربرگ صفحات داخلی: title, subtitle و breadcrumb (crumb_label, crumb_url) {% endcomment %}
+<section class="page-head" style="--head-img: url('{{ head_image|default:page_head_image }}')">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="{% url 'core:home' %}">خانه</a></li>
+      {% if crumb_url %}<li><a href="{{ crumb_url }}">{{ crumb_label }}</a></li>{% endif %}
+      <li aria-current="page">{{ title }}</li>
+    </ol>
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<p>{{ subtitle }}</p>{% endif %}
+  </div>
+  <span class="page-head-bar" aria-hidden="true"></span>
+</section>
